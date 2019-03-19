@@ -1,19 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(CharacterController))]  // Проверка на обязательное присутствие данного компонента
+[RequireComponent(typeof(CharacterController))] // Проверка на обязательное присутствие данного компонента
 public class RelativeMovement : MonoBehaviour {
-    
     public float moveSpeed = 6.0f;
     private CharacterController _charController;
-    
+
     // Сценарию нужна ссылка на объект, относительно которого будет происходить перемещение
     [SerializeField] private Transform target;
     public float rotSpeed = 15.0f;
 
+    public float jumpSpeed = 15.0f;
+    public float gravity = -9.8f;
+    public float terminalVelocity = -10.0f;
+    public float minFall = -1.5f;
+
+    private float _vertSpeed;
+
+
     private void Start() {
 //        Этот паттерн, знакомый вам по предыдущим главам, используется для доступа к другим компонентам.
-        _charController = GetComponent<CharacterController>(); 
+        _charController = GetComponent<CharacterController>();
+
+        // Инициализируем скорость по вертикали, присваивая ей минимальную скорость падения в начале существующей функции.
+        _vertSpeed = minFall;
     }
 
     void Update() {
@@ -21,22 +31,22 @@ public class RelativeMovement : MonoBehaviour {
 
         float horInput = Input.GetAxis("Horizontal");
         float vertInput = Input.GetAxis("Vertical");
-        
+
 
         // Движение обрабатывается только при нажатии клавиш со стрелками
         if (horInput != 0 || vertInput != 0) {
 //            movement.x = horInput;
 //            movement.z = vertInput;
-            
+
             movement.x = horInput * moveSpeed;
             movement.z = vertInput * moveSpeed;
             movement = Vector3.ClampMagnitude(movement, moveSpeed);
-            
-            
+
+
             // Сохраняем начальную ориентацию, чтобы вернуться к ней после завершения работы с целевым объектом.
             Quaternion tmp = target.rotation;
             target.eulerAngles = new Vector3(0, target.eulerAngles.y, 0);
-            
+
             // Преобразуем направления движения из локальных в глобальные координаты
             movement = target.TransformDirection(movement);
             target.rotation = tmp;
@@ -44,11 +54,30 @@ public class RelativeMovement : MonoBehaviour {
             // Метод LookRotation() вычисляет кватернион, смотрящий в этом направлении
 //            transform.rotation = Quaternion.LookRotation(movement);
             Quaternion direction = Quaternion.LookRotation(movement);
-                                                 // из какого на-я,   в какое,      с какой скоростью
+            // из какого на-я,   в какое,      с какой скоростью
             transform.rotation = Quaternion.Lerp(transform.rotation, direction, rotSpeed * Time.deltaTime);
-            
-            movement *= Time.deltaTime;
-            _charController.Move(movement);
         }
+
+        // Свойство isGrounded компонента CharacterController проверяет, соприкасается ли контроллер с поверхностью.
+        if (_charController.isGrounded) {
+            if (Input.GetButtonDown("Jump")) {
+                // Реакция на кнопку Jump при нахождении на поверхности.
+                _vertSpeed = jumpSpeed;
+            }
+            else {
+                _vertSpeed = minFall;
+            }
+        }
+        else {
+            // Если персонаж не стоит на поверхности, применяем гравитацию, пока не будет достигнута предельная скорость.
+            _vertSpeed += gravity * 5 * Time.deltaTime;
+            if (_vertSpeed < terminalVelocity) {
+                _vertSpeed = terminalVelocity;
+            }
+        }
+        
+        movement.y = _vertSpeed;
+        movement *= Time.deltaTime;
+        _charController.Move(movement);
     }
 }
