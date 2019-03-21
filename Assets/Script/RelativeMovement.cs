@@ -3,13 +3,15 @@ using System.Collections;
 
 [RequireComponent(typeof(CharacterController))] // Проверка на обязательное присутствие данного компонента
 public class RelativeMovement : MonoBehaviour {
-    public float moveSpeed = 6.0f;
+
     private CharacterController _charController;
+    private ControllerColliderHit _contact; // Нужно для сохранения данных о столкновении между функциями.
 
     // Сценарию нужна ссылка на объект, относительно которого будет происходить перемещение
     [SerializeField] private Transform target;
     public float rotSpeed = 15.0f;
 
+    public float moveSpeed = 6.0f;
     public float jumpSpeed = 15.0f;
     public float gravity = -9.8f;
     public float terminalVelocity = -10.0f;
@@ -58,8 +60,20 @@ public class RelativeMovement : MonoBehaviour {
             transform.rotation = Quaternion.Lerp(transform.rotation, direction, rotSpeed * Time.deltaTime);
         }
 
+        bool hitGround = false;
+        RaycastHit hit;
+
+        // Проверяем, падает ли персонаж. 
+        if (_vertSpeed < 0 && Physics.Raycast(transform.position, Vector3.down, out hit)) {
+//            Расстояние, с которым производится сравнение (слегка выходит за нижнюю часть капсулы). 
+            float check = (_charController.height + _charController.radius) / 1.9f;
+            hitGround = hit.distance <= check;
+        }
+
+
         // Свойство isGrounded компонента CharacterController проверяет, соприкасается ли контроллер с поверхностью.
-        if (_charController.isGrounded) {
+//        Вместо проверки свойства isGrounded смотрим на результат бросания луча.
+        if (hitGround) {
             if (Input.GetButtonDown("Jump")) {
                 // Реакция на кнопку Jump при нахождении на поверхности.
                 _vertSpeed = jumpSpeed;
@@ -74,10 +88,26 @@ public class RelativeMovement : MonoBehaviour {
             if (_vertSpeed < terminalVelocity) {
                 _vertSpeed = terminalVelocity;
             }
+
+
+//        Метод бросания луча не обнаруживает поверхности, но капсула с ней соприкасается
+            if (_charController.isGrounded) {
+//            Реакция слегка меняется в зависи- мости от того, смотрит ли персонаж в сторону точки контакта.
+                if (Vector3.Dot(movement, _contact.normal) < 0) {
+                    movement = _contact.normal * moveSpeed;
+                }
+                else {
+                    movement += _contact.normal * moveSpeed;
+                }
+            }
         }
-        
+
         movement.y = _vertSpeed;
         movement *= Time.deltaTime;
         _charController.Move(movement);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit) {
+        _contact = hit;
     }
 }
