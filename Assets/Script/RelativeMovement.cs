@@ -6,6 +6,8 @@ public class RelativeMovement : MonoBehaviour {
 
     private CharacterController _charController;
     private ControllerColliderHit _contact; // Нужно для сохранения данных о столкновении между функциями.
+    
+    private Animator _animator;
 
     // Сценарию нужна ссылка на объект, относительно которого будет происходить перемещение
     [SerializeField] private Transform target;
@@ -23,6 +25,8 @@ public class RelativeMovement : MonoBehaviour {
     private void Start() {
 //        Этот паттерн, знакомый вам по предыдущим главам, используется для доступа к другим компонентам.
         _charController = GetComponent<CharacterController>();
+
+        _animator = GetComponent<Animator>();
 
         // Инициализируем скорость по вертикали, присваивая ей минимальную скорость падения в начале существующей функции.
         _vertSpeed = minFall;
@@ -59,6 +63,8 @@ public class RelativeMovement : MonoBehaviour {
             // из какого на-я,   в какое,      с какой скоростью
             transform.rotation = Quaternion.Lerp(transform.rotation, direction, rotSpeed * Time.deltaTime);
         }
+        
+        _animator.SetFloat("Speed", movement.sqrMagnitude);
 
         bool hitGround = false;
         RaycastHit hit;
@@ -80,6 +86,7 @@ public class RelativeMovement : MonoBehaviour {
             }
             else {
                 _vertSpeed = minFall;
+                _animator.SetBool("Jumping", false);
             }
         }
         else {
@@ -87,6 +94,11 @@ public class RelativeMovement : MonoBehaviour {
             _vertSpeed += gravity * 5 * Time.deltaTime;
             if (_vertSpeed < terminalVelocity) {
                 _vertSpeed = terminalVelocity;
+            }
+            
+            // Не вводите в действие это значение в самом начале уровня.
+            if (_contact != null ) {
+                _animator.SetBool("Jumping", true);
             }
 
 
