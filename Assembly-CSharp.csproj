@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Script\ColorChangeDevice.cs" />
      <Compile Include="Assets\Script\DeviceOperator.cs" />
+     <Compile Include="Assets\Script\DeviceTrigger.cs" />
      <Compile Include="Assets\Script\DoorOpenDevice.cs" />
      <Compile Include="Assets\Script\OrbitCamera.cs" />
      <Compile Include="Assets\Script\RelativeMovement.cs" />

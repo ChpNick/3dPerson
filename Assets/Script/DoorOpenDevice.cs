@@ -19,4 +19,22 @@ public class DoorOpenDevice : MonoBehaviour {
 
         _open = !_open;
     }
+
+    public void Activate() {
+        // Открывает дверь, только если она пока не открыта. 
+        if (!_open) {
+            Vector3 pos = transform.position + dPos;
+            transform.position = pos;
+            _open = true;
+        }
+    }
+
+    public void Deactivate() {
+//        Аналогично, закрывает дверь только при условии, что она уже не закрыта.
+        if (_open) {
+            Vector3 pos = transform.position - dPos;
+            transform.position = pos;
+            _open = false;
+        }
+    }
 }

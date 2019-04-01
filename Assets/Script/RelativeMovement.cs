@@ -3,10 +3,9 @@ using System.Collections;
 
 [RequireComponent(typeof(CharacterController))] // Проверка на обязательное присутствие данного компонента
 public class RelativeMovement : MonoBehaviour {
-
     private CharacterController _charController;
     private ControllerColliderHit _contact; // Нужно для сохранения данных о столкновении между функциями.
-    
+
     private Animator _animator;
 
     // Сценарию нужна ссылка на объект, относительно которого будет происходить перемещение
@@ -20,6 +19,8 @@ public class RelativeMovement : MonoBehaviour {
     public float minFall = -1.5f;
 
     private float _vertSpeed;
+
+    public float pushForce = 3.0f; // Величина прилагаемой силы.
 
 
     private void Start() {
@@ -63,7 +64,7 @@ public class RelativeMovement : MonoBehaviour {
             // из какого на-я,   в какое,      с какой скоростью
             transform.rotation = Quaternion.Lerp(transform.rotation, direction, rotSpeed * Time.deltaTime);
         }
-        
+
         _animator.SetFloat("Speed", movement.sqrMagnitude);
 
         bool hitGround = false;
@@ -95,9 +96,9 @@ public class RelativeMovement : MonoBehaviour {
             if (_vertSpeed < terminalVelocity) {
                 _vertSpeed = terminalVelocity;
             }
-            
+
             // Не вводите в действие это значение в самом начале уровня.
-            if (_contact != null ) {
+            if (_contact != null) {
                 _animator.SetBool("Jumping", true);
             }
 
@@ -121,5 +122,14 @@ public class RelativeMovement : MonoBehaviour {
 
     void OnControllerColliderHit(ControllerColliderHit hit) {
         _contact = hit;
+
+        // Проверка, есть ли у участвующего в столкновении, объекта Rigitbody, обеспечивающий
+        // реакцию на приложенную силу.
+        Rigidbody body = hit.collider.attachedRigidbody;
+
+        if (body != null && !body.isKinematic) {
+            // Назначение физическому телу скорости.
+            body.velocity = hit.moveDirection * pushForce;
+        }
     }
 }
