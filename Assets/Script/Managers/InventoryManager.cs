@@ -8,6 +8,8 @@ public class InventoryManager : MonoBehaviour, IGameManager {
 
     private Dictionary<string, int> _items; // При объявлении словаря указывается два типа: тип ключа и тип значения.
 
+    public string equippedItem { get; private set; }
+
     public void Startup() {
         // Сюда идут все задачи запуска с долгим временем выполнения
         Debug.Log("Inventory manager starting...");
@@ -52,5 +54,39 @@ public class InventoryManager : MonoBehaviour, IGameManager {
         }
 
         return 0;
+    }
+
+    public bool EquipItem(string name) {
+        // Проверяем наличие в инвентаре указанного элемента и тот факт, что он еще не подготовлен к использованию
+        if (_items.ContainsKey(name) && equippedItem != name) {
+            equippedItem = name;
+            Debug.Log("Equipped " + name);
+            return true;
+        }
+
+        equippedItem = null;
+        Debug.Log("Unequipped");
+        return false;
+    }
+
+    // Удаление элемента из инвентаря
+    public bool ConsumeItem(string name) {
+        // Проверка наличия элемента среди инвентаря.
+        if (_items.ContainsKey(name)) {
+            _items[name]--;
+
+            // Удаление записи, если количество становится равным нулю.
+            if (_items[name] == 0) {
+                _items.Remove(name);
+            }
+        }
+        else {
+            // Реакция в случае отсутствия в инвентаре нужного элемента. 
+            Debug.Log("cannot consume " + name);
+            return false;
+        }
+
+        DisplayItems();
+        return true;
     }
 }

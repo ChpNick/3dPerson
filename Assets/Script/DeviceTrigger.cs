@@ -4,9 +4,14 @@ using System.Collections;
 public class DeviceTrigger : MonoBehaviour {
     //Список целевых объектов, которые будет активировать данный триггер.
     [SerializeField] private GameObject[] targets;
+    public bool requireKey;
 
     // Метод OnTriggerEnter() вызывается при попадании foreach (GameObject target in targets) { объекта в зону триггера...
     void OnTriggerEnter(Collider other) {
+        if (requireKey && Managers.Inventory.equippedItem != "key") {
+            return;
+        }
+
         foreach (GameObject target in targets) {
             target.SendMessage("Activate");
         }
