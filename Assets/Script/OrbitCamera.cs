@@ -8,11 +8,14 @@ public class OrbitCamera : MonoBehaviour {
 
     public float rotSpeed = 1.5f;
     private float _rotY;
+    private float _rotX;
     private Vector3 _offset;
 
     void Start() {
 //        Сохранение начального смещения между камерой и целью.
         _rotY = transform.eulerAngles.y;
+        _rotX = transform.eulerAngles.x;
+        
         _offset = target.position - transform.position;
     }
 
@@ -25,9 +28,10 @@ public class OrbitCamera : MonoBehaviour {
         else {
             // или быстрый поворот с помощью мыши. 
             _rotY += Input.GetAxis("Mouse X") * rotSpeed * 3;
+            _rotX += Input.GetAxis("Mouse Y") * rotSpeed * 3;
         }
         // Поддерживаем начальное смещение, сдвигаемое в соответствии с поворотом
-        Quaternion rotation = Quaternion.Euler(0, _rotY, 0);
+        Quaternion rotation = Quaternion.Euler(_rotX, _rotY, 0);
         transform.position = target.position - (rotation * _offset);
         
         // Камера всегда направлена на цель, где бы относительно этой цели она ни располагалась.

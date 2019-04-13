@@ -65,6 +65,9 @@
     <Compile Include="Assets\Script\OrbitCamera.cs" />
     <Compile Include="Assets\Script\RelativeMovement.cs" />
     <Compile Include="Assets\Script\UI\BasicUI.cs" />
+    <Compile Include="Assets\Script\UI\WeatherController.cs" />
+    <None Include="Assets\Script\Shaders\SkyboxBlended.shader" />
+    <None Include="Assets\Script\Shaders\SkyboxBlendedFog.shader" />
     <Reference Include="UnityEngine.UI">
       <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
