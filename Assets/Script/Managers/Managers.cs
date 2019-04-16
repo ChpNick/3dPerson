@@ -5,10 +5,12 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerManager))] // Гарантируем существование различных диспетчеров. 
 [RequireComponent(typeof(InventoryManager))]
+[RequireComponent(typeof(WeatherManager))]
 public class Managers : MonoBehaviour {
     // Статические свойства, которыми остальной код пользуется для доступа к диспетчерам.
     public static PlayerManager Player { get; private set; }
     public static InventoryManager Inventory { get; private set; }
+    public static WeatherManager Weather { get; private set; }
 
 //    Список диспетчеров, который просматривается в цикле во время стартовой последовательности.
     private List<IGameManager> _startSequence;
@@ -16,16 +18,22 @@ public class Managers : MonoBehaviour {
     void Awake() {
         Player = GetComponent<PlayerManager>();
         Inventory = GetComponent<InventoryManager>();
+        Weather = GetComponent<WeatherManager>();
+
         _startSequence = new List<IGameManager>();
         _startSequence.Add(Inventory);
         _startSequence.Add(Player);
+        _startSequence.Add(Weather);
 
         StartCoroutine(StartupManagers()); // Асинхронно загружаем стартовую последовательность. 
     }
 
     private IEnumerator StartupManagers() {
+//        Создаются экземпляры объекта NetworkService для вставки во все диспетчеры.
+        NetworkService network = new NetworkService();
+
         foreach (IGameManager manager in _startSequence) {
-            manager.Startup();
+            manager.Startup(network);
             Debug.Log("---------");
         }
 
