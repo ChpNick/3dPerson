@@ -10,6 +10,8 @@ public class NetworkService {
 
     private const string jsonApi =
         "http://api.openweathermap.org/data/2.5/weather?q=Ivanovo,ru&APPID=690bec1d62bcd846a34e1e6b3f020282";
+    
+    private const string webImage = "http://upload.wikimedia.org/wikipedia/commons/c/c5/Moraine_Lake_17092005.jpg";
 
     private bool IsResponseValid(WWW www) {
 //      Проверка ответа на наличие ошибок. 
@@ -44,5 +46,13 @@ public class NetworkService {
 
     public IEnumerator GetWeatherJSON(Action<string> callback) {
         return CallAPI(jsonApi, callback);
+    }
+    
+    public IEnumerator DownloadImage(Action<Texture2D> callback) {
+        Debug.Log("Download Image!!!");
+        
+        WWW www = new WWW(webImage);
+        yield return www;
+        callback(www.texture);
     }
 }
