@@ -17,10 +17,12 @@ public class ImagesManager : MonoBehaviour, IGameManager {
     public void GetWebImage(Action<Texture2D> callback) {
         if (_webImage == null) {
             // Проверяем, нет ли уже сохраненного изображения.
-            StartCoroutine(_network.DownloadImage(callback));
+            StartCoroutine(_network.DownloadImage((Texture2D Image) => {
+                _webImage = Image;
+                callback(_webImage);
+            }));
         }
-        else {
-            callback(_webImage);
-        }
+
+        callback(_webImage);
     }
 }
