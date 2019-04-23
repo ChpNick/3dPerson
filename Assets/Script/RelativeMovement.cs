@@ -21,7 +21,10 @@ public class RelativeMovement : MonoBehaviour {
     private float _vertSpeed;
 
     public float pushForce = 3.0f; // Величина прилагаемой силы.
-
+    
+    
+    [SerializeField] private AudioSource soundSource; 
+    [SerializeField] private AudioClip JumpSound; 
 
     private void Start() {
 //        Этот паттерн, знакомый вам по предыдущим главам, используется для доступа к другим компонентам.
@@ -84,6 +87,9 @@ public class RelativeMovement : MonoBehaviour {
             if (Input.GetButtonDown("Jump")) {
                 // Реакция на кнопку Jump при нахождении на поверхности.
                 _vertSpeed = jumpSpeed;
+                
+                soundSource.PlayOneShot(JumpSound);
+//                soundSource.clip=JumpSound; soundSource.Play();
             }
             else {
                 _vertSpeed = minFall;
