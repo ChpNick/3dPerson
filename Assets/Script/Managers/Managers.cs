@@ -7,12 +7,14 @@ using System.Collections.Generic;
 [RequireComponent(typeof(InventoryManager))]
 [RequireComponent(typeof(WeatherManager))]
 [RequireComponent(typeof(ImagesManager))]
+[RequireComponent(typeof(AudioManager))]
 public class Managers : MonoBehaviour {
     // Статические свойства, которыми остальной код пользуется для доступа к диспетчерам.
     public static PlayerManager Player { get; private set; }
     public static InventoryManager Inventory { get; private set; }
     public static WeatherManager Weather { get; private set; }
     public static ImagesManager Images { get; private set; }
+    public static AudioManager Audio { get; private set; }
 
 //    Список диспетчеров, который просматривается в цикле во время стартовой последовательности.
     private List<IGameManager> _startSequence;
@@ -22,12 +24,15 @@ public class Managers : MonoBehaviour {
         Inventory = GetComponent<InventoryManager>();
         Weather = GetComponent<WeatherManager>();
         Images = GetComponent<ImagesManager>();
+        Audio = GetComponent<AudioManager>();
 
         _startSequence = new List<IGameManager>();
         _startSequence.Add(Inventory);
         _startSequence.Add(Player);
         _startSequence.Add(Weather);
         _startSequence.Add(Images);
+        _startSequence.Add(Audio);
+        
 
         StartCoroutine(StartupManagers()); // Асинхронно загружаем стартовую последовательность. 
     }

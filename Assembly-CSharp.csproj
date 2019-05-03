@@ -59,6 +59,7 @@
     <Compile Include="Assets\Script\DoorOpenDevice.cs" />
     <Compile Include="Assets\Script\EventMessenger\GameEvent.cs" />
     <Compile Include="Assets\Script\EventMessenger\Messenger.cs" />
+    <Compile Include="Assets\Script\Managers\AudioManager.cs" />
     <Compile Include="Assets\Script\Managers\IGameManager.cs" />
     <Compile Include="Assets\Script\Managers\ImagesManager.cs" />
     <Compile Include="Assets\Script\Managers\InventoryManager.cs" />
@@ -71,6 +72,8 @@
     <Compile Include="Assets\Script\Parser\MiniJSON.cs" />
     <Compile Include="Assets\Script\RelativeMovement.cs" />
     <Compile Include="Assets\Script\UI\BasicUI.cs" />
+    <Compile Include="Assets\Script\UI\SettingsPopup.cs" />
+    <Compile Include="Assets\Script\UI\UIController.cs" />
     <Compile Include="Assets\Script\UI\WeatherController.cs" />
     <Compile Include="Assets\Script\WebLoadingBillboard.cs" />
     <None Include="Assets\Script\Shaders\SkyboxBlended.shader" />
