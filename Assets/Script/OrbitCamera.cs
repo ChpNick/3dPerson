@@ -15,26 +15,28 @@ public class OrbitCamera : MonoBehaviour {
 //        Сохранение начального смещения между камерой и целью.
         _rotY = transform.eulerAngles.y;
         _rotX = transform.eulerAngles.x;
-        
+
         _offset = target.position - transform.position;
     }
 
     void LateUpdate() {
-        float horInput = Input.GetAxis("Horizontal");
-        if (horInput != 0) {
-            // Медленный поворот камеры при помощи клавиш со стрелками...
-            _rotY += horInput * rotSpeed;
-        }
-        else {
-            // или быстрый поворот с помощью мыши. 
-            _rotY += Input.GetAxis("Mouse X") * rotSpeed * 3;
-            _rotX += Input.GetAxis("Mouse Y") * rotSpeed * 3;
-        }
+        FromKeyRotate(-1);
+
+
         // Поддерживаем начальное смещение, сдвигаемое в соответствии с поворотом
         Quaternion rotation = Quaternion.Euler(_rotX, _rotY, 0);
         transform.position = target.position - (rotation * _offset);
-        
+
         // Камера всегда направлена на цель, где бы относительно этой цели она ни располагалась.
         transform.LookAt(target);
+    }
+
+    void FromKeyRotate(int direction = 1) {
+        _rotY += Input.GetAxis("Horizontal") * rotSpeed * direction;
+    }
+
+    void FromMouseRotate() {
+        _rotY += Input.GetAxis("Mouse X") * rotSpeed * 3;
+        _rotX += Input.GetAxis("Mouse Y") * rotSpeed * 3;
     }
 }

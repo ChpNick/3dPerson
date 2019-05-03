@@ -52,6 +52,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\AI\Fireball.cs" />
+    <Compile Include="Assets\Script\AI\PlayerCharacter.cs" />
+    <Compile Include="Assets\Script\AI\ReactiveTarget.cs" />
+    <Compile Include="Assets\Script\AI\SceneController.cs" />
+    <Compile Include="Assets\Script\AI\WanderingAI.cs" />
     <Compile Include="Assets\Script\CollectibleItem.cs" />
     <Compile Include="Assets\Script\ColorChangeDevice.cs" />
     <Compile Include="Assets\Script\DeviceOperator.cs" />
