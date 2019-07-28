@@ -51,8 +51,8 @@ public class InventoryPopup : MonoBehaviour {
                 entry.callback.AddListener((BaseEventData data) => { OnItem(item); });
 
                 EventTrigger trigger = itemIcons[i].GetComponent<EventTrigger>();
-                trigger.delegates.Clear(); // Сброс подписчика, чтобы начать с чистого листа. 
-                trigger.delegates.Add(entry); // Добавление функции-подписчика к классу EventTrigger.
+                trigger.triggers.Clear(); // Сброс подписчика, чтобы начать с чистого листа. 
+                trigger.triggers.Add(entry); // Добавление функции-подписчика к классу EventTrigger.
             }
             else {
                 itemIcons[i].gameObject.SetActive(false); // Скрываем изображение/текст при отсутствии

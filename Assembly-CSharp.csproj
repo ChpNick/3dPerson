@@ -65,12 +65,14 @@
     <Compile Include="Assets\Script\DoorOpenDevice.cs" />
     <Compile Include="Assets\Script\EventMessenger\GameEvent.cs" />
     <Compile Include="Assets\Script\EventMessenger\Messenger.cs" />
+    <Compile Include="Assets\Script\EventMessenger\StartupEvent.cs" />
     <Compile Include="Assets\Script\Managers\AudioManager.cs" />
     <Compile Include="Assets\Script\Managers\IGameManager.cs" />
     <Compile Include="Assets\Script\Managers\ImagesManager.cs" />
     <Compile Include="Assets\Script\Managers\InventoryManager.cs" />
     <Compile Include="Assets\Script\Managers\Managers.cs" />
     <Compile Include="Assets\Script\Managers\ManagerStatus.cs" />
+    <Compile Include="Assets\Script\Managers\MissionManager.cs" />
     <Compile Include="Assets\Script\Managers\NetworkService.cs" />
     <Compile Include="Assets\Script\Managers\PlayerManager.cs" />
     <Compile Include="Assets\Script\Managers\WeatherManager.cs" />
