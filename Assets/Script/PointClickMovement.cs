@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CharacterController))] // Проверка на обязательное присутствие данного компонента
 public class PointClickMovement : MonoBehaviour {
@@ -20,12 +21,12 @@ public class PointClickMovement : MonoBehaviour {
 
     private float _vertSpeed;
 
-    public float pushForce = 3.0f;             // Величина прилагаемой силы.
+    public float pushForce = 3.0f; // Величина прилагаемой силы.
 
-    public float deceleration = 20.0f;         // показатель снижения скорости
-    public float targetBuffer = 1.5f;          // минимальное расстояние до целевой точки
-    private float _curSpeed = 0f;              // скорость во время движения к точке, изменяемая
-    private Vector3 _targetPos = Vector3.one;  // позиция целевой точки
+    public float deceleration = 20.0f; // показатель снижения скорости
+    public float targetBuffer = 1.5f; // минимальное расстояние до целевой точки
+    private float _curSpeed = 0f; // скорость во время движения к точке, изменяемая
+    private Vector3 _targetPos = Vector3.one; // позиция целевой точки
 
 
     [SerializeField] private AudioSource soundSource;
@@ -45,12 +46,12 @@ public class PointClickMovement : MonoBehaviour {
         Vector3 movement = Vector3.zero; // Начинаем с вектора (0, 0, 0), непрерывно добавляя компоненты движения.
 
         // Задаем целевую точку по щелчку мыши.
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject()) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Испускаем луч в точку щелчка мышью. 
             RaycastHit mouseHit;
             if (Physics.Raycast(ray, out mouseHit)) {
                 GameObject hitObject = mouseHit.transform.gameObject;
-                
+
                 if (hitObject.layer == LayerMask.NameToLayer("Ground")) {
                     _targetPos = mouseHit.point; // Устанавливаем цель в точке попадания луча.
                     _curSpeed = moveSpeed;
