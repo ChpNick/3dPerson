@@ -11,9 +11,16 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
     public void Startup(NetworkService service) {
         Debug.Log("Player manager starting...");
-        Health = 50; // │ Эти значения могут быть инициализированы 
-        maxHealth = 100; // │ сохраненными данными.
+//        Health = 50; // │ Эти значения могут быть инициализированы 
+//        maxHealth = 100; // │ сохраненными данными.
+        UpdateData(50, 100); // Вызываем метод обновления вместо того, чтобы задавать переменные напрямую.
+
         status = ManagerStatus.Started;
+    }
+
+    public void UpdateData(int health, int maxHealth) {
+        this.Health = health;
+        this.maxHealth = maxHealth;
     }
 
     public void ChangeHealth(int value) {
@@ -27,6 +34,16 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         }
 
         Debug.Log("Health: " + Health + "/" + maxHealth);
+        
+        if (Health == 0) {
+            Messenger.Broadcast(GameEvent.LEVEL_FAILED);
+        }
+        
         Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
+    }
+    
+    // Возвращаем игрока в исходное состояние.
+    public void Respawn() {
+        UpdateData(50, 100);
     }
 }

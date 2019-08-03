@@ -8,18 +8,26 @@ public class UIController : MonoBehaviour {
     [SerializeField] private Text healthLabel; // Ссылка на UI-объект в сцене. 
     [SerializeField] private InventoryPopup i_popup;
 
+    [SerializeField] private Text levelEnding;
+
     void Awake() {
         Messenger.AddListener(GameEvent.HEALTH_UPDATED, OnHealthUpdated);
+        Messenger.AddListener(GameEvent.LEVEL_COMPLETE, OnLevelComplete);
+        Messenger.AddListener(GameEvent.LEVEL_FAILED, OnLevelFailed);
     }
 
     void OnDestroy() {
         Messenger.RemoveListener(GameEvent.HEALTH_UPDATED, OnHealthUpdated);
+        Messenger.RemoveListener(GameEvent.LEVEL_COMPLETE, OnLevelComplete);
+        Messenger.RemoveListener(GameEvent.LEVEL_FAILED, OnLevelFailed);
     }
 
     void Start() {
-        s_popup.gameObject.SetActive(false); // Инициализируем всплывающее окно в скрытом состоянии.
-
         OnHealthUpdated();
+
+        // Инициализируем всплывающие окна в скрытом состоянии.
+        levelEnding.gameObject.SetActive(false);
+        s_popup.gameObject.SetActive(false);
         i_popup.gameObject.SetActive(false);
     }
 
@@ -40,5 +48,34 @@ public class UIController : MonoBehaviour {
     private void OnHealthUpdated() {
         string message = "Health: " + Managers.Player.Health + "/" + Managers.Player.maxHealth;
         healthLabel.text = message;
+    }
+
+    private void OnLevelComplete() {
+        StartCoroutine(CompleteLevel());
+    }
+
+    private IEnumerator CompleteLevel() {
+        levelEnding.gameObject.SetActive(true);
+        levelEnding.text = "Level Complete!";
+
+        // Отображаем сообщение в течение двух секунд, а потом переходим на следующий уровень.
+        yield return new WaitForSeconds(2);
+
+        levelEnding.gameObject.SetActive(false);
+        Managers.Mission.GoToNext();
+    }
+
+    private void OnLevelFailed() {
+        StartCoroutine(FailLevel());
+    }
+
+    private IEnumerator FailLevel() {
+        levelEnding.gameObject.SetActive(true);
+        levelEnding.text = "Level Failed!"; // Используем ту же самую текстовую метку, но с другим сообщением.
+        
+        yield return new WaitForSeconds(2);
+
+        Managers.Player.Respawn();
+        Managers.Mission.RestartCurrent(); // После двухсекундной паузы начинаем текущий уровень сначала. }
     }
 }

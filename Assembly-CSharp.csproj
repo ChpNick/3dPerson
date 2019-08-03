@@ -75,7 +75,9 @@
     <Compile Include="Assets\Script\Managers\MissionManager.cs" />
     <Compile Include="Assets\Script\Managers\NetworkService.cs" />
     <Compile Include="Assets\Script\Managers\PlayerManager.cs" />
+    <Compile Include="Assets\Script\Managers\StartupController.cs" />
     <Compile Include="Assets\Script\Managers\WeatherManager.cs" />
+    <Compile Include="Assets\Script\ObjectiveTrigger.cs" />
     <Compile Include="Assets\Script\OrbitCamera.cs" />
     <Compile Include="Assets\Script\Parser\MiniJSON.cs" />
     <Compile Include="Assets\Script\PointClickMovement.cs" />
