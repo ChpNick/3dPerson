@@ -9,6 +9,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(ImagesManager))]
 [RequireComponent(typeof(AudioManager))]
 [RequireComponent(typeof(MissionManager))]
+[RequireComponent(typeof(DataManager))]
 public class Managers : MonoBehaviour {
     // Статические свойства, которыми остальной код пользуется для доступа к диспетчерам.
     public static PlayerManager Player { get; private set; }
@@ -17,6 +18,7 @@ public class Managers : MonoBehaviour {
     public static ImagesManager Images { get; private set; }
     public static AudioManager Audio { get; private set; }
     public static MissionManager Mission {get; private set;}
+    public static DataManager Data {get; private set;}
 
 //    Список диспетчеров, который просматривается в цикле во время стартовой последовательности.
     private List<IGameManager> _startSequence;
@@ -24,6 +26,7 @@ public class Managers : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject); // Команда Unity для сохранения объекта между сценами.
         
+        Data = GetComponent<DataManager>();
         Player = GetComponent<PlayerManager>();
         Inventory = GetComponent<InventoryManager>();
         Weather = GetComponent<WeatherManager>();
@@ -38,6 +41,7 @@ public class Managers : MonoBehaviour {
         _startSequence.Add(Images);
         _startSequence.Add(Audio);
         _startSequence.Add(Mission);
+        _startSequence.Add(Data);
         
 
         StartCoroutine(StartupManagers()); // Асинхронно загружаем стартовую последовательность. 

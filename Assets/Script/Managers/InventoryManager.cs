@@ -13,9 +13,19 @@ public class InventoryManager : MonoBehaviour, IGameManager {
     public void Startup(NetworkService service) {
         // Сюда идут все задачи запуска с долгим временем выполнения
         Debug.Log("Inventory manager starting...");
-        _items = new Dictionary<string, int>(); // Инициализируем словарь элементов.
+
+        UpdateData(new Dictionary<string, int>()); // Инициализируем пустой список.
 
         status = ManagerStatus.Started; // Для задач с долгим временем выполнения используем состояние 'Initializing’.
+    }
+
+    public void UpdateData(Dictionary<string, int> items) {
+        _items = items;
+    }
+
+    public Dictionary<string, int> GetData() {
+        // Необходима функция чтения для сохранения данных.
+        return _items;
     }
 
     // Вывод на консоль сообщения о текущем инвентаре.
